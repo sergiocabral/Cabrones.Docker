@@ -1,0 +1,49 @@
+# Infraestrutura para o framework Cabrones
+
+version: "3.7"
+
+services:
+
+  http:
+    build:
+      dockerfile: ubuntu+http+ftp.dockerfile
+      context: ../../images
+      args:
+        SUFFIX: "##[ CABRONES ]##   "
+        HTTP_EMAIL: "webmaster@cabral.srv.br"
+        HTTP_DOMAIN: "localhost"
+        FTP_USER: "admin"
+        FTP_PASSWORD: "knowpass"
+    image: cabrones-http
+    container_name: cabrones-http
+    restart: unless-stopped
+    depends_on:
+      - "mysql"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "20-21:20-21"
+      - "21100-21110:21100-21110"
+    networks: 
+      - cabrones-network
+
+  mysql:
+    build:
+      dockerfile: ubuntu+mysql.dockerfile
+      context: ../../images
+      args:
+        SUFFIX: "##[ CABRONES ]##   "
+        MYSQL_ROOT_USER: "admin"
+        MYSQL_ROOT_HOST: "%"
+        MYSQL_ROOT_PASSWORD: "knowpass"
+    image: cabrones-mysql
+    container_name: cabrones-mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    networks:
+      - cabrones-network
+
+networks: 
+  cabrones-network:
+    driver: bridge
