@@ -38,6 +38,11 @@ printf "\n\n";
     printf "$SUFFIX Installing others utils packages...\n";
     printf "\n";
 
+    printf "$SUFFIX Installing: sudo\n";
+    printf "\n";
+    apt-get install -y sudo;
+    printf "\n";
+
     printf "$SUFFIX Installing: vim\n";
     printf "\n";
     apt-get install -y vim;

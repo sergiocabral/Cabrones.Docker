@@ -6,7 +6,7 @@ services:
 
   http:
     build:
-      dockerfile: ubuntu+http+ftp.dockerfile
+      dockerfile: ubuntu+http+ftp+ssh.dockerfile
       context: ../../images
       args:
         SUFFIX: "##[ CABRONES ]##   "
@@ -14,6 +14,8 @@ services:
         HTTP_DOMAIN: "localhost"
         FTP_USER: "admin"
         FTP_PASSWORD: "knowpass"
+        SSH_USER: "admin"
+        SSH_PASSWORD: "knowpass"
     image: cabrones-http
     container_name: cabrones-http
     restart: unless-stopped

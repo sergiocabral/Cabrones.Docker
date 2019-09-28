@@ -44,6 +44,11 @@ COPY ./scripts/vsftpd /root/scripts/vsftpd
 WORKDIR /root/scripts/vsftpd
 RUN /root/scripts/vsftpd/run.sh
 
+# Open SSH Server.
+COPY ./scripts/openssh-server /root/scripts/openssh-server
+WORKDIR /root/scripts/openssh-server
+RUN /root/scripts/openssh-server/run.sh
+
 # Liberação de portas de rede.
 EXPOSE 80/tcp
 EXPOSE 443/tcp
