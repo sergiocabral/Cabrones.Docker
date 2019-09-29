@@ -82,7 +82,7 @@ printf "\n\n";
 
     htpasswd -cdb /etc/vsftpd.passwd $FTP_USER $FTP_PASSWORD;
 
-    chown -R ftp.ftp /var/www/html
+    chown -R ftp.ftp /var/www/*
 
     printf "\n";
 

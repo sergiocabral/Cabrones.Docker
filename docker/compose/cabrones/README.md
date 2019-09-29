@@ -22,3 +22,5 @@
      - 443/tcp
      - 20-21/tcp
      - 21100-21110/tcp
+
+Use o comando a seguir para definir a senha: `docker-compose build --build-arg FTP_PASSWORD="minha-senha" --build-arg SSH_PASSWORD="minha-senha"`

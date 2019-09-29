@@ -14,6 +14,11 @@ printf "\n\n";
 
     apt-get install -y openssh-server;
 
+    if [ ! -f "/run/sshd" ]
+    then
+        mkdir /run/sshd
+    fi
+
     printf "\n";
 
 # Backup de arquivos originais.
@@ -83,6 +88,15 @@ printf "\n\n";
     adduser --disabled-password --gecos "" $SSH_USER
     echo $SSH_USER:$SSH_PASSWORD | chpasswd
     usermod -aG sudo $SSH_USER
+
+    printf "\n";
+
+# Configura mensagem de boas-vindas motd
+    printf "$SUFFIX Configuring welcome message, motd.\n";
+
+    cp motd /etc/motd
+    chmod -x /etc/update-motd.d/*
+    chmod +x /etc/update-motd.d/00-*
 
     printf "\n";
 

@@ -27,4 +27,5 @@ O script `run.sh` depende de...
     - `SSH_USER` = "sshuser"
     - `SSH_PASSWORD` = "password"
   - Concedido acesso ao usuário.grupo `sudo` para execuçaõ de comandos como administrador.
+  - Ajustado mensagem de boas-vindas motd.
 - Registra no serviço *supervisor* a **execução automática** do MariaDB com o comando `openssh`.

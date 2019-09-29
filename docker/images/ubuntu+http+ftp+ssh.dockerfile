@@ -13,6 +13,8 @@ ARG HTTP_EMAIL=""
 ARG HTTP_DOMAIN=""
 ARG FTP_USER=""
 ARG FTP_PASSWORD=""
+ARG SSH_USER=""
+ARG SSH_PASSWORD=""
 
 # Linux Ubuntu.
 COPY ./scripts/ubuntu /root/scripts/ubuntu
@@ -53,6 +55,7 @@ RUN /root/scripts/openssh-server/run.sh
 EXPOSE 80/tcp
 EXPOSE 443/tcp
 EXPOSE 20-21
+EXPOSE 22
 EXPOSE 21100-21110
 
 # Caminho inicial.
