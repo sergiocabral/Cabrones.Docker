@@ -53,6 +53,11 @@ printf "\n\n";
     apt-get install -y iputils-ping;
     printf "\n";
 
+    printf "$SUFFIX Installing: git\n";
+    printf "\n";
+    apt-get install -y git;
+    printf "\n";
+
     printf "$SUFFIX Installing: supervisor\n";
     printf "\n";
     apt-get install -y supervisor;

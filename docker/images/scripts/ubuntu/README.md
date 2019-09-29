@@ -13,7 +13,9 @@ O script `run.sh` depende de...
 - Definição do **timezone**.
 - **Atualização do apt-get** com `update`, `upgrade` e `autoremove`.
 - Instalação de **pacotes úteis**:
+  - Executar como root `sudo`.
   - Editor de textos `vim`.
+  - Editor de textos `git`.
   - Ferramenta de rede `ping`.
   - Serviço de execução em background `supervisor`.
 - Configuração inicial do serviço **supervisor**.
