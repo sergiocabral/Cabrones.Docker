@@ -24,3 +24,13 @@
      - 21100-21110/tcp
 
 Use o comando a seguir para definir a senha: `docker-compose build --build-arg FTP_PASSWORD="minha-senha" --build-arg SSH_PASSWORD="minha-senha"`
+Seguem a lista de argumentos configuráveis:
+  - `HTTP_EMAIL`
+  - `HTTP_DOMAIN`
+  - `FTP_USER`
+  - `FTP_PASSWORD`
+  - `SSH_USER`
+  - `SSH_PASSWORD`
+  - `MYSQL_ROOT_USER`
+  - `MYSQL_ROOT_HOST`
+  - `MYSQL_ROOT_PASSWORD`
