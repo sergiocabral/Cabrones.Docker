@@ -6,18 +6,38 @@ services:
 
   nginx:
     container_name: nginx
-    image: nginx
+    image: nginx:latest
     ports:
       - 80:80
       - 443:443
     volumes:
-      - ${DirectoryConfiguration}nginx/templates:/etc/nginx/templates
-      - ${DirectoryConfiguration}nginx/html:/usr/share/nginx/html
-      - ${DirectoryTemporary}nginx/log:/var/log/nginx
+      - ${HostDirectoryConfiguration}nginx/templates:/etc/nginx/templates
+      - ${HostDirectoryConfiguration}nginx/html:/usr/share/nginx/html
+      - ${HostDirectoryData}nginx/certs:/etc/nginx/certs:ro
+      - ${HostDirectoryTemporary}nginx/vhost.d:/etc/nginx/vhost.d
+      - ${HostDirectoryTemporary}nginx/log:/var/log/nginx
+    env_file: 
+      - ./.env
     networks:
       - network-nominal
     restart: unless-stopped
 
+  portainer:
+    container_name: portainer
+    image: portainer/portainer:latest
+    ports:
+      - 9000:9000
+    volumes:
+      - ${HostDirectoryData}portainer/data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    env_file: 
+      - ./.env
+    networks:
+      - network-nominal
+    restart: unless-stopped
+    depends_on: 
+      - nginx
+    
 networks:
   network-nominal:
     driver: bridge
