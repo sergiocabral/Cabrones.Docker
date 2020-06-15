@@ -1,0 +1,23 @@
+# Infraestrutura para o Cardapiou
+
+version: "3.3"
+
+services:
+
+  nginx:
+    container_name: nginx
+    image: nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ${DirectoryConfiguration}nginx/templates:/etc/nginx/templates
+      - ${DirectoryConfiguration}nginx/html:/usr/share/nginx/html
+      - ${DirectoryTemporary}nginx/log:/var/log/nginx
+    networks:
+      - network-nominal
+    restart: unless-stopped
+
+networks:
+  network-nominal:
+    driver: bridge
