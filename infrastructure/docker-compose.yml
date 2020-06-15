@@ -10,6 +10,7 @@ services:
     volumes: 
       - ${HostDirectoryData}letsencrypt/conf:/etc/letsencrypt
       - ${HostDirectoryData}letsencrypt/www:/var/www/certbot
+    entrypoint: 'sleep infinity'
 
   nginx:
     container_name: nginx
@@ -20,12 +21,11 @@ services:
     volumes:
       - ${HostDirectoryConfiguration}nginx/templates:/etc/nginx/templates
       - ${HostDirectoryConfiguration}nginx/html:/usr/share/nginx/html
-      - ${HostDirectoryData}nginx/conf.d:/etc/nginx/conf.d
-      - ${HostDirectoryData}nginx/certs:/etc/nginx/certs:ro
+      - ${HostDirectoryData}nginx/certs:/etc/nginx/certs
+      - ${HostDirectoryTemporary}nginx/conf.d:/etc/nginx/conf.d
+      - ${HostDirectoryTemporary}nginx/log:/var/log/nginx
       - ${HostDirectoryData}letsencrypt/conf:/etc/letsencrypt
       - ${HostDirectoryData}letsencrypt/www:/var/www/certbot
-      - ${HostDirectoryTemporary}nginx/vhost.d:/etc/nginx/vhost.d
-      - ${HostDirectoryTemporary}nginx/log:/var/log/nginx
     env_file: 
       - ./.env
     networks:
@@ -37,8 +37,8 @@ services:
   portainer:
     container_name: portainer
     image: portainer/portainer:latest
-    ports:
-      - 9000:9000
+    expose:
+      - 9000
     volumes:
       - ${HostDirectoryData}portainer/data:/data
       - /var/run/docker.sock:/var/run/docker.sock
