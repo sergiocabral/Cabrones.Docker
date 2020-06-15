@@ -4,13 +4,21 @@ version: "3.3"
 
 services:
 
-  certboot:
-    container_name: certbot
-    image: certbot/certbot:latest
-    volumes: 
-      - ${HostDirectoryData}letsencrypt/conf:/etc/letsencrypt
-      - ${HostDirectoryData}letsencrypt/www:/var/www/certbot
-    entrypoint: 'sleep infinity'
+  certificates-ssl:
+    build:
+      dockerfile: .dockerfile
+      context: ./images/certificates-ssl/
+    image: certificates-ssl
+    container_name: certificates-ssl
+    environment:
+      CERTIFICATE_EMAIL: "nominaler@cabral.srv.br"
+      CERTIFICATE_DOMAINS: "nominaler.cabral.srv.br,docker.cabral.srv.br,teamcity.cabral.srv.br+docker.cabral.srv.br+teamcity.cabral.srv.br"
+    ports:
+      - 80:80
+    volumes:
+      - ${HostDirectoryData}certificates-ssl:/etc/letsencrypt/archive
+    networks: 
+    - network-nominal
 
   nginx:
     container_name: nginx
@@ -21,18 +29,16 @@ services:
     volumes:
       - ${HostDirectoryConfiguration}nginx/templates:/etc/nginx/templates
       - ${HostDirectoryConfiguration}nginx/html:/usr/share/nginx/html
-      - ${HostDirectoryData}nginx/certs:/etc/nginx/certs
       - ${HostDirectoryTemporary}nginx/conf.d:/etc/nginx/conf.d
       - ${HostDirectoryTemporary}nginx/log:/var/log/nginx
-      - ${HostDirectoryData}letsencrypt/conf:/etc/letsencrypt
-      - ${HostDirectoryData}letsencrypt/www:/var/www/certbot
+      - ${HostDirectoryData}certificates-ssl:/etc/nginx/certs
     env_file: 
       - ./.env
     networks:
       - network-nominal
     restart: unless-stopped
     depends_on: 
-      - certboot
+      - certificates-ssl
 
   portainer:
     container_name: portainer
