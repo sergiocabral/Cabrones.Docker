@@ -4,6 +4,13 @@ version: "3.3"
 
 services:
 
+  certboot:
+    container_name: certbot
+    image: certbot/certbot:latest
+    volumes: 
+      - ${HostDirectoryData}letsencrypt/conf:/etc/letsencrypt
+      - ${HostDirectoryData}letsencrypt/www:/var/www/certbot
+
   nginx:
     container_name: nginx
     image: nginx:latest
@@ -13,7 +20,10 @@ services:
     volumes:
       - ${HostDirectoryConfiguration}nginx/templates:/etc/nginx/templates
       - ${HostDirectoryConfiguration}nginx/html:/usr/share/nginx/html
+      - ${HostDirectoryData}nginx/conf.d:/etc/nginx/conf.d
       - ${HostDirectoryData}nginx/certs:/etc/nginx/certs:ro
+      - ${HostDirectoryData}letsencrypt/conf:/etc/letsencrypt
+      - ${HostDirectoryData}letsencrypt/www:/var/www/certbot
       - ${HostDirectoryTemporary}nginx/vhost.d:/etc/nginx/vhost.d
       - ${HostDirectoryTemporary}nginx/log:/var/log/nginx
     env_file: 
@@ -21,6 +31,8 @@ services:
     networks:
       - network-nominal
     restart: unless-stopped
+    depends_on: 
+      - certboot
 
   portainer:
     container_name: portainer

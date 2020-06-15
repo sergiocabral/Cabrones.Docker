@@ -4,10 +4,28 @@ upstream portainer {
 
 server {
     listen       80;
-    listen  [::]:80;
-    server_name  ${DomainPrefixPortainer}.cabral.srv.br;
+    server_name  ${DomainPrefixPortainer}.${DomainSuffix};
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+    
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+}
+
+server {
+    listen       443 ssl;
+    server_name  ${DomainPrefixPortainer}.${DomainSuffix};
 
     location / {
         proxy_pass  http://portainer;
     }
+
+    ssl_certificate /etc/letsencrypt/live/${DomainPrefixPortainer}.${DomainSuffix}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DomainPrefixPortainer}.${DomainSuffix}/privkey.pem;
+
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 }
