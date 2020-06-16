@@ -63,7 +63,7 @@ services:
   nginx:
     env_file: ./.env
     build:
-      context: ./images/nginx-certbot/
+      context: ../../images/nginx-certbot/
     image: nginx-certbot
     container_name: ${NginxName}
     restart: unless-stopped
