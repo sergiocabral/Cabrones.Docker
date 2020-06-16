@@ -7,11 +7,11 @@ then
     exit 1;
 fi
 
-if [ -z "$CERTIFICATE_DOMAINS" ]; 
+if [ -z "$CERTIFICATE_DOMAIN_1" ]; 
 then 
     printf "List of domains is empty.\n";
-    printf "Set value for environment variable: CERTIFICATE_DOMAINS\n";
-    printf "Use format: domain1a.com,domain1b.com,domain1c.com+domain2.com+domain3a.com,domain3b.com\n";
+    printf "Set value for environment variables: CERTIFICATE_DOMAIN_1, CERTIFICATE_DOMAIN_2, ...\n";
+    printf "Use format: domain1.com,domain2.com,domain3.com\n";
     exit 1;
 fi
 
@@ -34,9 +34,17 @@ nginx;
 
 printf "Requesting certificates to Let's Encrypt.\n";
 
-IFS='+' read -ra CERTIFICATE_DOMAINS_LIST <<< "$CERTIFICATE_DOMAINS"
-for CERTIFICATE_DOMAINS_GROUP in "${CERTIFICATE_DOMAINS_LIST[@]}"; do
+DOMAIN_INDEX=0;
+while [ -z "" ]; do
+    ((DOMAIN_INDEX++));
+    VAR_NAME="CERTIFICATE_DOMAIN_$DOMAIN_INDEX";
+    VAR_VALUE="${!VAR_NAME}";
 
+    if [ -z $VAR_VALUE ]; then
+        break;
+    fi
+
+    CERTIFICATE_DOMAINS_GROUP="$VAR_VALUE";
     CERTBOT_ARG_DOMAIN="";
     CERTBOT_ARG_NAME="";
 
@@ -57,7 +65,7 @@ for CERTIFICATE_DOMAINS_GROUP in "${CERTIFICATE_DOMAINS_LIST[@]}"; do
         
         printf "$CERTBOT_COMMAND\n";
 
-        $CERTBOT_COMMAND
+        $CERTBOT_COMMAND;
     fi
 
 done

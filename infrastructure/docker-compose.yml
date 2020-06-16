@@ -81,5 +81,8 @@ services:
       - ${HostDirectoryTemporary}/${NginxName}/log:/var/log/nginx
       - ${HostDirectoryTemporary}/${NginxName}/log:/var/log/letsencrypt
     environment:
-      CERTIFICATE_EMAIL: "${ComputerName}@${ComputerDomain}"
-      CERTIFICATE_DOMAINS: "${ComputerName}.${ComputerDomain} + docker.${ComputerDomain} + teamcity.${ComputerDomain}"
+      - CERTIFICATE_EMAIL=${ComputerName}@${ComputerDomain}
+      - CERTIFICATE_DOMAIN_1=${ComputerName}.${ComputerDomain}
+      - CERTIFICATE_DOMAIN_2=${PortainerDomain}.${ComputerDomain}
+      - CERTIFICATE_DOMAIN_3=${TeamcityDomain}.${ComputerDomain}
+      - CERTIFICATE_DOMAIN_4=${NetdataDomain}.${ComputerDomain}
