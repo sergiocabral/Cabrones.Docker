@@ -21,19 +21,6 @@ services:
       - ${HostDirectoryData}/${PortainerName}/data:/data
       - /var/run/docker.sock:/var/run/docker.sock
 
-  teamcity:
-    env_file: ./.env
-    container_name: ${TeamcityName}
-    image: jetbrains/teamcity-server:latest
-    restart: unless-stopped
-    networks:
-      - network-nominal
-    expose:
-      - ${TeamcityPort}
-    volumes:
-      - ${HostDirectoryData}/${TeamcityName}/data:/data/teamcity_server/datadir
-      - ${HostDirectoryTemporary}/${TeamcityName}/log:/opt/teamcity/logs
-
   netdata:
     env_file: ./.env
     container_name: ${NetdataName}
@@ -59,6 +46,19 @@ services:
       - SYS_PTRACE
     security_opt:
       - apparmor:unconfined
+
+  teamcity:
+    env_file: ./.env
+    container_name: ${TeamcityName}
+    image: jetbrains/teamcity-server:latest
+    restart: unless-stopped
+    networks:
+      - network-nominal
+    expose:
+      - ${TeamcityPort}
+    volumes:
+      - ${HostDirectoryData}/${TeamcityName}/data:/data/teamcity_server/datadir
+      - ${HostDirectoryTemporary}/${TeamcityName}/log:/opt/teamcity/logs
 
   nginx:
     env_file: ./.env
@@ -86,3 +86,7 @@ services:
       - CERTIFICATE_DOMAIN_2=${PortainerDomain}.${ComputerDomain}
       - CERTIFICATE_DOMAIN_3=${TeamcityDomain}.${ComputerDomain}
       - CERTIFICATE_DOMAIN_4=${NetdataDomain}.${ComputerDomain}
+    depends_on:
+      - portainer
+      - netdata
+      - teamcity
