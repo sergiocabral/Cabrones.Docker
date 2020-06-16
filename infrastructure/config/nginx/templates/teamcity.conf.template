@@ -1,6 +1,10 @@
+upstream ${TeamcityName} {
+  server                    ${TeamcityName}:${TeamcityPort};
+}
+
 server {
     listen                  80;
-    server_name             ${ComputerName}.${ComputerDomain};
+    server_name             ${TeamcityDomain}.${ComputerDomain};
 
     location / {
         return              301 https://$host$request_uri;
@@ -9,11 +13,10 @@ server {
 
 server {
     listen                  443 ssl;
-    server_name             ${ComputerName}.${ComputerDomain};
+    server_name             ${TeamcityDomain}.${ComputerDomain};
 
     location / {
-        root                /usr/share/nginx/html;
-        index               index.txt;
+        proxy_pass          http://${TeamcityName};
     }
 
     ssl_certificate         /etc/letsencrypt/live/${ComputerName}.${ComputerDomain}/fullchain.pem;

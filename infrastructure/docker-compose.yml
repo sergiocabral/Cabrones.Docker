@@ -4,46 +4,55 @@ version: "3.3"
 
 services:
 
-  nginx:
-    build:
-      context: ./images/nginx-certbot/
-    image: nginx-certbot
-    container_name: nginx
-    environment:
-      CERTIFICATE_EMAIL: "${ComputerName}@${DomainSuffix}"
-      CERTIFICATE_DOMAINS: "${ComputerName}.${DomainSuffix} + docker.${DomainSuffix} + teamcity.${DomainSuffix}"
-    ports:
-      - 80:80
-      - 443:443
+  portainer:
+    env_file: ./.env
+    container_name: ${PortainerName}
+    image: portainer/portainer:latest
+    expose:
+      - ${PortainerPort}
     volumes:
-      - ${HostDirectoryConfiguration}nginx/templates:/etc/nginx/templates
-      - ${HostDirectoryConfiguration}nginx/html:/usr/share/nginx/html
-      - ${HostDirectoryData}nginx/conf.d:/etc/nginx/conf.d
-      - ${HostDirectoryTemporary}nginx/log:/var/log/nginx
-      - ${HostDirectoryData}letsencrypt/archive:/etc/letsencrypt/archive
-      - ${HostDirectoryData}letsencrypt/live:/etc/letsencrypt/live
-      - ${HostDirectoryTemporary}letsencrypt/log:/var/log/letsencrypt
-    env_file: 
-      - ./.env
+      - ${HostDirectoryData}/${PortainerName}/data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - network-nominal
     restart: unless-stopped
 
-  portainer:
-    container_name: portainer
-    image: portainer/portainer:latest
+  teamcity:
+    env_file: ./.env
+    container_name: ${TeamcityName}
+    image: jetbrains/teamcity-server:latest
     expose:
-      - 9000
+      - ${TeamcityPort}
     volumes:
-      - ${HostDirectoryData}portainer/data:/data
-      - /var/run/docker.sock:/var/run/docker.sock
-    env_file: 
-      - ./.env
+      - ${HostDirectoryData}/${TeamcityName}/data:/data/teamcity_server/datadir
+      - ${HostDirectoryTemporary}/${TeamcityName}/log:/opt/teamcity/logs
     networks:
       - network-nominal
     restart: unless-stopped
-    depends_on: 
-      - nginx
+
+  nginx:
+    env_file: ./.env
+    build:
+      context: ./images/nginx-certbot/
+    image: nginx-certbot
+    container_name: ${NginxName}
+    environment:
+      CERTIFICATE_EMAIL: "${ComputerName}@${ComputerDomain}"
+      CERTIFICATE_DOMAINS: "${ComputerName}.${ComputerDomain} + docker.${ComputerDomain} + teamcity.${ComputerDomain}"
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ${HostDirectoryConfiguration}/${NginxName}/templates:/etc/nginx/templates
+      - ${HostDirectoryConfiguration}/${NginxName}/html:/usr/share/nginx/html
+      - ${HostDirectoryData}/${NginxName}/conf.d:/etc/nginx/conf.d
+      - ${HostDirectoryData}/${NginxName}/letsencrypt/archive:/etc/letsencrypt/archive
+      - ${HostDirectoryData}/${NginxName}/letsencrypt/live:/etc/letsencrypt/live
+      - ${HostDirectoryTemporary}/${NginxName}/log:/var/log/nginx
+      - ${HostDirectoryTemporary}/${NginxName}/log:/var/log/letsencrypt
+    networks:
+      - network-nominal
+    restart: unless-stopped
     
 networks:
   network-nominal:
