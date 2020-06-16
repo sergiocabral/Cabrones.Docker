@@ -9,10 +9,6 @@ server {
     location / {
         return 301 https://$host$request_uri;
     }
-    
-    location /.well-known/acme-challenge/ {
-        root /var/www/certbot;
-    }
 }
 
 server {
@@ -23,9 +19,6 @@ server {
         proxy_pass  http://portainer;
     }
 
-    ssl_certificate /etc/letsencrypt/live/${DomainPrefixPortainer}.${DomainSuffix}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/${DomainPrefixPortainer}.${DomainSuffix}/privkey.pem;
-
-    include /etc/letsencrypt/options-ssl-nginx.conf;
-    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+    ssl_certificate /etc/letsencrypt/live/${ComputerName}.${DomainSuffix}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${ComputerName}.${DomainSuffix}/privkey.pem;
 }

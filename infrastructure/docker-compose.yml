@@ -4,41 +4,30 @@ version: "3.3"
 
 services:
 
-  certificates-ssl:
-    build:
-      dockerfile: .dockerfile
-      context: ./images/certificates-ssl/
-    image: certificates-ssl
-    container_name: certificates-ssl
-    environment:
-      CERTIFICATE_EMAIL: "nominaler@cabral.srv.br"
-      CERTIFICATE_DOMAINS: "nominaler.cabral.srv.br,docker.cabral.srv.br,teamcity.cabral.srv.br+docker.cabral.srv.br+teamcity.cabral.srv.br"
-    ports:
-      - 80:80
-    volumes:
-      - ${HostDirectoryData}certificates-ssl:/etc/letsencrypt/archive
-    networks: 
-    - network-nominal
-
   nginx:
+    build:
+      context: ./images/nginx-certbot/
+    image: nginx-certbot
     container_name: nginx
-    image: nginx:latest
+    environment:
+      CERTIFICATE_EMAIL: "${ComputerName}@${DomainSuffix}"
+      CERTIFICATE_DOMAINS: "${ComputerName}.${DomainSuffix} + docker.${DomainSuffix} + teamcity.${DomainSuffix}"
     ports:
       - 80:80
       - 443:443
     volumes:
       - ${HostDirectoryConfiguration}nginx/templates:/etc/nginx/templates
       - ${HostDirectoryConfiguration}nginx/html:/usr/share/nginx/html
-      - ${HostDirectoryTemporary}nginx/conf.d:/etc/nginx/conf.d
+      - ${HostDirectoryData}nginx/conf.d:/etc/nginx/conf.d
       - ${HostDirectoryTemporary}nginx/log:/var/log/nginx
-      - ${HostDirectoryData}certificates-ssl:/etc/nginx/certs
+      - ${HostDirectoryData}letsencrypt/archive:/etc/letsencrypt/archive
+      - ${HostDirectoryData}letsencrypt/live:/etc/letsencrypt/live
+      - ${HostDirectoryTemporary}letsencrypt/log:/var/log/letsencrypt
     env_file: 
       - ./.env
     networks:
       - network-nominal
     restart: unless-stopped
-    depends_on: 
-      - certificates-ssl
 
   portainer:
     container_name: portainer
