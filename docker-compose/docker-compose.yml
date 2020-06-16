@@ -75,6 +75,7 @@ services:
     volumes:
       - ${HostDirectoryConfiguration}/${NginxName}/templates:/etc/nginx/templates
       - ${HostDirectoryConfiguration}/${NginxName}/html:/usr/share/nginx/html
+      - ${HostDirectoryConfiguration}/${NginxName}/auth:/etc/nginx/auth
       - ${HostDirectoryData}/${NginxName}/conf.d:/etc/nginx/conf.d
       - ${HostDirectoryData}/${NginxName}/letsencrypt/archive:/etc/letsencrypt/archive
       - ${HostDirectoryData}/${NginxName}/letsencrypt/live:/etc/letsencrypt/live
