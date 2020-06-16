@@ -42,6 +42,7 @@ services:
     environment:
       - DOCKER_USR=root
       - VIRTUALIZATION=${VIRTUALIZATION}
+      - PGID=${PGID}
     cap_add:
       - SYS_PTRACE
     security_opt:
