@@ -2,33 +2,63 @@
 
 version: "3.3"
 
+networks:
+  network-nominal:
+    driver: bridge
+    
 services:
 
   portainer:
     env_file: ./.env
     container_name: ${PortainerName}
     image: portainer/portainer:latest
+    restart: unless-stopped
+    networks:
+      - network-nominal
     expose:
       - ${PortainerPort}
     volumes:
       - ${HostDirectoryData}/${PortainerName}/data:/data
       - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - network-nominal
-    restart: unless-stopped
 
   teamcity:
     env_file: ./.env
     container_name: ${TeamcityName}
     image: jetbrains/teamcity-server:latest
+    restart: unless-stopped
+    networks:
+      - network-nominal
     expose:
       - ${TeamcityPort}
     volumes:
       - ${HostDirectoryData}/${TeamcityName}/data:/data/teamcity_server/datadir
       - ${HostDirectoryTemporary}/${TeamcityName}/log:/opt/teamcity/logs
+
+  netdata:
+    env_file: ./.env
+    container_name: ${NetdataName}
+    image: netdata/netdata:latest
+    restart: unless-stopped
     networks:
       - network-nominal
-    restart: unless-stopped
+    expose:
+      - ${NetdataPort}
+    volumes:
+      - ${HostDirectoryTemporary}/${NetdataName}/cache:/var/cache/netdata
+      - ${HostDirectoryTemporary}/${NetdataName}/log:/var/log/netdata
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - DOCKER_USR=root
+      - VIRTUALIZATION=${VIRTUALIZATION}
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
 
   nginx:
     env_file: ./.env
@@ -36,9 +66,9 @@ services:
       context: ./images/nginx-certbot/
     image: nginx-certbot
     container_name: ${NginxName}
-    environment:
-      CERTIFICATE_EMAIL: "${ComputerName}@${ComputerDomain}"
-      CERTIFICATE_DOMAINS: "${ComputerName}.${ComputerDomain} + docker.${ComputerDomain} + teamcity.${ComputerDomain}"
+    restart: unless-stopped
+    networks:
+      - network-nominal
     ports:
       - 80:80
       - 443:443
@@ -50,10 +80,6 @@ services:
       - ${HostDirectoryData}/${NginxName}/letsencrypt/live:/etc/letsencrypt/live
       - ${HostDirectoryTemporary}/${NginxName}/log:/var/log/nginx
       - ${HostDirectoryTemporary}/${NginxName}/log:/var/log/letsencrypt
-    networks:
-      - network-nominal
-    restart: unless-stopped
-    
-networks:
-  network-nominal:
-    driver: bridge
+    environment:
+      CERTIFICATE_EMAIL: "${ComputerName}@${ComputerDomain}"
+      CERTIFICATE_DOMAINS: "${ComputerName}.${ComputerDomain} + docker.${ComputerDomain} + teamcity.${ComputerDomain}"
