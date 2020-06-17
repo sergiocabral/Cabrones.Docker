@@ -13,6 +13,12 @@ create_conf_final_dir() {
     chown -R ${SQUID_USER}:${SQUID_USER} ${SQUID_CONF_FINAL_DIR};
 }
 
+create_passwd_dir() {
+    mkdir -p ${SQUID_PASSWD_DIR};
+    chmod -R 755 ${SQUID_PASSWD_DIR};
+    chown -R ${SQUID_USER}:${SQUID_USER} ${SQUID_PASSWD_DIR};
+}
+
 create_log_dir() {
     mkdir -p ${SQUID_LOG_DIR};
     chmod -R 755 ${SQUID_LOG_DIR};
@@ -26,8 +32,15 @@ create_cache_dir() {
 
 create_conf_template_dir;
 create_conf_final_dir;
+create_passwd_dir;
 create_log_dir;
 create_cache_dir;
+
+if [ -n "$SQUID_AUTH_USER" ];
+then
+    printf "Setting user $SQUID_AUTH_USER and password.\n";
+    htpasswd -bc "${SQUID_PASSWD_DIR}/passwd" "$SQUID_AUTH_USER" "$SQUID_AUTH_PASS";    
+fi
 
 cd /etc/squid;
 /envsubst.sh;
