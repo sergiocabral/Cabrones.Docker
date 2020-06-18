@@ -1,24 +1,15 @@
-FROM ubuntu:latest
+FROM alpine:latest
 
-ENV SQUID_CONF_FINAL_DIR=/etc/squid/conf \
-    SQUID_CONF_TEMPLATE_DIR=/etc/squid/templates \
-    SQUID_PASSWD_DIR=/etc/squid/passwd \
-    SQUID_CACHE_DIR=/var/spool/squid \
-    SQUID_LOG_DIR=/var/log/squid \
-    SQUID_USER=proxy \
-    SQUID_AUTH_USER= \
-    SQUID_AUTH_PASS=
+RUN    apk update \
+    && apk add bash \
+    && apk add gettext \
+    && apk add apache2-utils \
+    && apk add squid \
+    && rm -rf /var/cache/apk/*
 
-RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y squid \
-    && apt-get install -y gettext-base \
-    && apt-get install -y apache2-utils \    
-    && rm -rf /var/lib/apt/lists/*
+COPY ./scripts/* /root/
+COPY ./entrypoint.sh /root/
 
-COPY envsubst.sh /envsubst.sh
-RUN chmod 755 /envsubst.sh
+RUN chmod 755 /root/*.sh
 
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod 755 /entrypoint.sh
-
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/root/entrypoint.sh"]
