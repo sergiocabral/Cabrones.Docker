@@ -1,0 +1,24 @@
+version: "3.3"
+
+networks:
+  nominal:
+    driver: bridge
+    
+services:
+
+  proxy:
+    image: sergiocabral/squid
+    container_name: proxy-${ProxyName}
+    restart: unless-stopped
+    networks:
+      - nominal
+    ports:
+      - ${ProxyPort}:3128
+    volumes:
+      - ${HostDirectoryConfiguration}/${ProxyName}/conf:/etc/squid/conf.templates
+      - ${HostDirectoryData}/${ProxyName}/conf:/etc/squid/conf
+      - ${HostDirectoryData}/${ProxyName}/passwd:/etc/squid/passwd
+      - ${HostDirectoryTemporary}/${ProxyName}/cache:/var/cache/squid
+      - ${HostDirectoryTemporary}/${ProxyName}/log:/var/log/squid
+    environment:
+      - SQUID_USERS=${ProxyUsers}
