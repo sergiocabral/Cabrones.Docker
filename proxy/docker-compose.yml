@@ -15,10 +15,10 @@ services:
     ports:
       - ${ProxyPort}:3128
     volumes:
-      - ${HostDirectoryConfiguration}/${ProxyName}/conf:/etc/squid/conf.templates
-      - ${HostDirectoryData}/${ProxyName}/conf:/etc/squid/conf
-      - ${HostDirectoryData}/${ProxyName}/passwd:/etc/squid/passwd
-      - ${HostDirectoryTemporary}/${ProxyName}/cache:/var/cache/squid
+      - ${HostDirectoryConfiguration}/${ProxyName}/templates:/etc/squid.templates
+      - ${HostDirectoryData}/${ProxyName}/conf:/etc/squid.conf
       - ${HostDirectoryTemporary}/${ProxyName}/log:/var/log/squid
     environment:
       - SQUID_USERS=${ProxyUsers}
+      - SQUID_LOGIN_MESSAGE=${ProxyLoginMessage}
+      - SQUID_ALLOW_UNSECURE=${ProxyAllowUnsecure}
