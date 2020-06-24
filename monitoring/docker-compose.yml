@@ -1,0 +1,19 @@
+version: "3.3"
+
+networks:
+  nominal:
+    driver: bridge
+    
+services:
+
+  proxy:
+    image: portainer/portainer
+    container_name: ${PortainerName}
+    restart: unless-stopped
+    networks:
+      - nominal
+    ports:
+      - ${PortainerPort}:9000
+    volumes:
+      - ${HostDirectoryData}/${PortainerName}/data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
