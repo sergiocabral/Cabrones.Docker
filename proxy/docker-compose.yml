@@ -8,7 +8,7 @@ services:
 
   proxy:
     image: sergiocabral/squid
-    container_name: proxy-${ProxyName}
+    container_name: ${ProxyName}
     restart: unless-stopped
     networks:
       - nominal
