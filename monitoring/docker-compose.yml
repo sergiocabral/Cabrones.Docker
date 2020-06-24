@@ -6,7 +6,7 @@ networks:
     
 services:
 
-  proxy:
+  portainer:
     image: portainer/portainer
     container_name: ${PortainerName}
     restart: unless-stopped
@@ -17,3 +17,28 @@ services:
     volumes:
       - ${HostDirectoryData}/${PortainerName}/data:/data
       - /var/run/docker.sock:/var/run/docker.sock
+
+  netdata:
+    image: netdata/netdata
+    container_name: ${NetdataName}
+    restart: unless-stopped
+    networks:
+      - nominal
+    ports:
+      - ${NetdataPort}:19999
+    volumes:
+      - ${HostDirectoryData}/${NetdataName}/lib:/var/lib/netdata
+      - ${HostDirectoryTemporary}/${NetdataName}/cache:/var/cache/netdata
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - DOCKER_USR=root
+      - VIRTUALIZATION=${VIRTUALIZATION}
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
