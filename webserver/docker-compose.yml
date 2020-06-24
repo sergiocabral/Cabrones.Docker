@@ -1,0 +1,34 @@
+version: "3.3"
+
+networks:
+  nominal:
+    driver: bridge
+
+services:
+
+  webserver:
+    image: sergiocabral/nginx
+    container_name: ${WebserverName}
+    restart: unless-stopped
+    networks:
+      - nominal
+    ports:
+      - 80:80
+      - 443:443
+    volumes:      
+      - ${HostDirectoryConfiguration}/${WebserverName}/templates:/etc/nginx.templates
+      - ${HostDirectoryConfiguration}/${WebserverName}/certificates:/etc/nginx.certificates
+      - ${HostDirectoryData}/${WebserverName}/conf:/etc/nginx.conf
+      - ${HostDirectoryTemporary}/${WebserverName}/log:/var/log/nginx
+      - ${HostDirectoryTemporary}/${WebserverName}/temp:/var/lib/nginx/tmp/      
+    environment:
+
+      - HOST1_URL=${HOST1_URL}
+      - HOST1_SERVER=${HOST1_SERVER}
+      - HOST1_AUTH=${HOST1_AUTH}
+      - HOST1_SSL_EMAIL=${HOST1_SSL_EMAIL}
+
+      - HOST2_URL=${HOST2_URL}
+      - HOST2_SERVER=${HOST2_SERVER}
+      - HOST2_AUTH=${HOST2_AUTH}
+      - HOST2_SSL_EMAIL=${HOST2_SSL_EMAIL}
