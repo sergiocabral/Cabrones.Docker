@@ -1,0 +1,20 @@
+version: "3.3"
+
+networks:
+  nominal:
+    driver: bridge
+
+services:
+
+  smtp:
+    image: sergiocabral/postfix
+    container_name: ${SmtpName}
+    restart: unless-stopped
+    networks:
+      - nominal
+    ports:
+      - ${SmtpPort}:25
+    volumes:
+      - ${HostDirectoryConfiguration}/${SmtpName}/templates:/etc/postfix.templates
+      - ${HostDirectoryData}/${SmtpName}/conf:/etc/postfix.conf
+      - ${HostDirectoryTemporary}/${SmtpName}/log:/var/log
