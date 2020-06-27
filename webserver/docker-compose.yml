@@ -13,8 +13,8 @@ services:
     networks:
       - nominal
     ports:
-      - 80:80
-      - 443:443
+      - ${WebserverPortHTTP}:80
+      - ${WebserverPortHTTPS}:443
     volumes:      
       - ${HostDirectoryConfiguration}/${WebserverName}/templates:/etc/nginx.templates
       - ${HostDirectoryConfiguration}/${WebserverName}/certificates:/etc/nginx.certificates
