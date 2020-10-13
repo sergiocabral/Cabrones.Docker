@@ -19,6 +19,6 @@ services:
       - ${HostDirectoryData}/${ProxyName}/conf:/etc/squid.conf
       - ${HostDirectoryTemporary}/${ProxyName}/log:/var/log/squid
     environment:
-      - SQUID_USERS=${ProxyUsers}
-      - SQUID_LOGIN_MESSAGE=${ProxyLoginMessage}
-      - SQUID_ALLOW_UNSECURE=${ProxyAllowUnsecure}
+      - SQUID_USERS=${SQUID_USERS}
+      - SQUID_LOGIN_MESSAGE=${SQUID_LOGIN_MESSAGE}
+      - SQUID_ALLOW_UNSECURE=${SQUID_ALLOW_UNSECURE}
