@@ -1,0 +1,24 @@
+version: "3.3"
+
+networks:
+  nominal:
+    driver: bridge
+    
+services:
+
+  mysql:
+    container_name: ${MySqlName}
+    image: mariadb
+    restart: unless-stopped
+    networks:
+      - nominal
+    ports:
+      - ${MySqlPort}:3306
+    volumes:
+      - ${HostDirectoryData}/${MySqlName}/data:/var/lib/mysql
+      - ${HostDirectoryTemporary}/${MySqlName}/log:/var/log/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MySqlRootPassword}"
+      MYSQL_USER: "${MySqlUserName}"
+      MYSQL_PASSWORD: "${MySqlUserPassword}"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "${MySqlAllowEmptyPassword}"
