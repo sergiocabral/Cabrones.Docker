@@ -1,0 +1,67 @@
+version: "3.3"
+
+networks:
+  nominal:
+    driver: bridge
+    
+services:
+
+  elasticsearch:
+    container_name: ${ElasticsearchName}
+    image: elasticsearch:${Version}
+    restart: unless-stopped
+    networks:
+      - nominal
+    ports:
+      - ${ElasticsearchPort92}:9200
+      - ${ElasticsearchPort93}:9300
+    volumes:
+      - ${HostDirectoryData}/${ElasticsearchName}/data:/usr/share/elasticsearch/data
+      - ${HostDirectoryTemporary}/${ElasticsearchName}/log:/usr/share/elasticsearch/logs
+    environment:
+      ELASTIC_USERNAME: "${ElasticsearchUsername}"
+      ELASTIC_PASSWORD: "${ElasticsearchPassword}"
+      xpack.security.enabled: "true"
+      discovery.type: "single-node"
+      http.host: "0.0.0.0"
+
+  logstash:
+    container_name: ${LogstashName}
+    image: logstash:${Version}
+    restart: unless-stopped
+    networks:
+      - nominal
+    volumes:
+      - ${HostDirectoryData}/${LogstashName}/data:/usr/share/logstash/data
+      - ${HostDirectoryTemporary}/${LogstashName}/log:/usr/share/logstash/logs
+    environment:
+      ELASTIC_USERNAME: "${ElasticsearchUsername}"
+      ELASTIC_PASSWORD: "${ElasticsearchPassword}"
+      xpack.monitoring.elasticsearch.hosts: "http://${ElasticsearchName}:${ElasticsearchPort92}"
+      xpack.monitoring.elasticsearch.username: "${ElasticsearchUsername}"
+      xpack.monitoring.elasticsearch.password: "${ElasticsearchPassword}"
+      xpack.monitoring.enabled: "true"
+      xpack.security.enabled: "true"
+      http.host: "0.0.0.0"
+
+  kibana:
+    container_name: ${KibanaName}
+    image: kibana:${Version}
+    restart: unless-stopped
+    networks:
+      - nominal
+    ports:
+      - ${KibanaPort}:5601
+    volumes:
+      - ${HostDirectoryData}/${KibanaName}/data:/usr/share/kibana/data
+      - ${HostDirectoryTemporary}/${KibanaName}/log:/usr/share/kibana/logs
+    environment:
+      ELASTICSEARCH_USERNAME: "${ElasticsearchUsername}"
+      ELASTICSEARCH_PASSWORD: "${ElasticsearchPassword}"
+      ELASTICSEARCH_HOSTS: "http://${ElasticsearchName}:${ElasticsearchPort92}"
+      xpack.monitoring.ui.container.elasticsearch.enabled: "true"
+      XPACK_GRAPH_ENABLED: "true"
+      XPACK_WATCHER_ENABLED: "true"
+      XPACK_ML_ENABLED: "true"
+      XPACK_MONITORING_ENABLED: "true"
+      XPACK_SECURITY_ENABLED: "true"
