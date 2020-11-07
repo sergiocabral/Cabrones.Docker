@@ -19,16 +19,17 @@ services:
       - ${HostDirectoryConfiguration}/${WebserverName}/templates:/etc/nginx.templates
       - ${HostDirectoryConfiguration}/${WebserverName}/certificates:/etc/nginx.certificates
       - ${HostDirectoryData}/${WebserverName}/conf:/etc/nginx.conf
+      - ${HostDirectoryData}/${WebserverName}/sites:/home/
       - ${HostDirectoryTemporary}/${WebserverName}/log:/var/log/nginx
-      - ${HostDirectoryTemporary}/${WebserverName}/temp:/var/lib/nginx/tmp/      
+      - ${HostDirectoryTemporary}/${WebserverName}/temp:/var/lib/nginx/tmp/
     environment:
 
       - HOST1_URL=${HOST1_URL}
-      - HOST1_SERVER=${HOST1_SERVER}
+      - HOST1_LOCATION=${HOST1_LOCATION}
       - HOST1_AUTH=${HOST1_AUTH}
       - HOST1_SSL_EMAIL=${HOST1_SSL_EMAIL}
 
       - HOST2_URL=${HOST2_URL}
-      - HOST2_SERVER=${HOST2_SERVER}
+      - HOST2_LOCATION=${HOST2_LOCATION}
       - HOST2_AUTH=${HOST2_AUTH}
       - HOST2_SSL_EMAIL=${HOST2_SSL_EMAIL}
