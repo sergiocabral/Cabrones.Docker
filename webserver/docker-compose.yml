@@ -6,6 +6,42 @@ networks:
 
 services:
 
+  php5:
+    image: sergiocabral/phpfpm
+    container_name: php5
+    restart: unless-stopped
+    networks:
+      - nominal
+    ports:
+      - 9005:9000
+    volumes:
+      - ${HostDirectoryConfiguration}/php5/templates:/etc/php5.templates
+      - ${HostDirectoryConfiguration}/php5/templates.d:/etc/php5.templates.d
+      - ${HostDirectoryConfiguration}/php5/templates.fpm:/etc/php5.templates.fpm
+      - ${HostDirectoryData}/php5/conf:/etc/php5.conf
+      - ${HostDirectoryData}/${WebserverName}/sites:/home/
+      - ${HostDirectoryTemporary}/php5/log:/var/log
+    environment:
+      - PHP_VERSION=5
+
+  php7:
+    image: sergiocabral/phpfpm
+    container_name: php7
+    restart: unless-stopped
+    networks:
+      - nominal
+    ports:
+      - 9007:9000
+    volumes:
+      - ${HostDirectoryConfiguration}/php7/templates:/etc/php7.templates
+      - ${HostDirectoryConfiguration}/php7/templates.d:/etc/php7.templates.d
+      - ${HostDirectoryConfiguration}/php7/templates.fpm:/etc/php7.templates.fpm
+      - ${HostDirectoryData}/php7/conf:/etc/php7.conf
+      - ${HostDirectoryData}/${WebserverName}/sites:/home
+      - ${HostDirectoryTemporary}/php7/log:/var/log
+    environment:
+      - PHP_VERSION=7
+
   webserver:
     image: sergiocabral/nginx
     container_name: ${WebserverName}
@@ -19,11 +55,11 @@ services:
       - ${HostDirectoryConfiguration}/${WebserverName}/templates:/etc/nginx.templates
       - ${HostDirectoryConfiguration}/${WebserverName}/certificates:/etc/nginx.certificates
       - ${HostDirectoryData}/${WebserverName}/conf:/etc/nginx.conf
-      - ${HostDirectoryData}/${WebserverName}/sites:/home/
-      - ${HostDirectoryTemporary}/${WebserverName}/log:/var/log/nginx
-      - ${HostDirectoryTemporary}/${WebserverName}/temp:/var/lib/nginx/tmp/
+      - ${HostDirectoryData}/${WebserverName}/sites:/home
+      - ${HostDirectoryTemporary}/${WebserverName}/log-nginx:/var/log/nginx
+      - ${HostDirectoryTemporary}/${WebserverName}/log-letsencrypt:/var/log/letsencrypt
+      - ${HostDirectoryTemporary}/${WebserverName}/temp-nginx:/var/lib/nginx/tmp/
     environment:
-
       - HOST1_URL=${HOST1_URL}
       - HOST1_LOCATION=${HOST1_LOCATION}
       - HOST1_AUTH=${HOST1_AUTH}
@@ -33,3 +69,13 @@ services:
       - HOST2_LOCATION=${HOST2_LOCATION}
       - HOST2_AUTH=${HOST2_AUTH}
       - HOST2_SSL_EMAIL=${HOST2_SSL_EMAIL}
+
+      - HOST3_URL=${HOST3_URL}
+      - HOST3_LOCATION=${HOST3_LOCATION}
+      - HOST3_AUTH=${HOST3_AUTH}
+      - HOST3_SSL_EMAIL=${HOST3_SSL_EMAIL}
+
+      - HOST4_URL=${HOST4_URL}
+      - HOST4_LOCATION=${HOST4_LOCATION}
+      - HOST4_AUTH=${HOST4_AUTH}
+      - HOST4_SSL_EMAIL=${HOST4_SSL_EMAIL}
