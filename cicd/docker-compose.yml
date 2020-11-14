@@ -1,0 +1,30 @@
+version: "3.3"
+
+networks:
+  nominal:
+    external: true
+    
+services:
+
+  teamcity-server:
+    container_name: ${TeamCityServerName}
+    image: jetbrains/teamcity-server
+    restart: unless-stopped
+    networks:
+      - nominal
+    ports:
+      - ${TeamCityServerPort}:8111
+    volumes:
+      - ${HostDirectoryData}/${TeamCityServerName}/data:/data/teamcity_server/datadir
+      - ${HostDirectoryTemporary}/${TeamCityServerName}/log:/opt/teamcity/logs
+
+  teamcity-agent-1:
+    container_name: ${TeamCityAgent1Name}
+    image: jetbrains/teamcity-agent
+    restart: unless-stopped
+    networks:
+      - nominal
+    environment:
+      - SERVER_URL=http://${TeamCityServerName}:8111
+      - AGENT_NAME=${TeamCityAgent1Name}
+
