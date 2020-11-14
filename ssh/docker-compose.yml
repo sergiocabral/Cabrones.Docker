@@ -1,0 +1,21 @@
+version: "3.3"
+
+networks:
+  nominal:
+    external: true
+
+services:
+
+  ssh:
+    image: sergiocabral/ssh
+    container_name: ${SshName}
+    restart: unless-stopped
+    networks:
+      - nominal
+    ports:
+      - ${SshPortHTTP}:22
+    volumes:      
+      - ${HostDirectoryConfiguration}/${SshName}/templates:/etc/ssh.templates
+      - ${HostDirectoryData}/${SshName}/conf:/etc/ssh.conf
+      - ${HostDirectoryDeploy}:/home
+      - ${HostDirectoryTemporary}/${SshName}/log:/var/log
