@@ -2,26 +2,9 @@ version: "3.3"
 
 networks:
   nominal:
-    driver: bridge
+    external: true
 
 services:
-
-  mysql:
-    container_name: ${MySqlName}
-    image: mariadb
-    restart: unless-stopped
-    networks:
-      - nominal
-    ports:
-      - ${MySqlPort}:3306
-    volumes:
-      - ${HostDirectoryData}/${MySqlName}/data:/var/lib/mysql
-      - ${HostDirectoryTemporary}/${MySqlName}/log:/var/log/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: "${MySqlRootPassword}"
-      MYSQL_USER: "${MySqlUserName}"
-      MYSQL_PASSWORD: "${MySqlUserPassword}"
-      MYSQL_ALLOW_EMPTY_PASSWORD: "${MySqlAllowEmptyPassword}"
 
   php5:
     image: sergiocabral/phpfpm
@@ -36,7 +19,7 @@ services:
       - ${HostDirectoryConfiguration}/php5/templates.d:/etc/php5.templates.d
       - ${HostDirectoryConfiguration}/php5/templates.fpm:/etc/php5.templates.fpm
       - ${HostDirectoryData}/php5/conf:/etc/php5.conf
-      - ${HostDirectoryData}/${WebserverName}/sites:/home/
+      - ${HostDirectoryDeploy}:/home
       - ${HostDirectoryTemporary}/php5/log:/var/log
     environment:
       - PHP_VERSION=5
@@ -54,7 +37,7 @@ services:
       - ${HostDirectoryConfiguration}/php7/templates.d:/etc/php7.templates.d
       - ${HostDirectoryConfiguration}/php7/templates.fpm:/etc/php7.templates.fpm
       - ${HostDirectoryData}/php7/conf:/etc/php7.conf
-      - ${HostDirectoryData}/${WebserverName}/sites:/home
+      - ${HostDirectoryDeploy}:/home
       - ${HostDirectoryTemporary}/php7/log:/var/log
     environment:
       - PHP_VERSION=7
@@ -72,7 +55,7 @@ services:
       - ${HostDirectoryConfiguration}/${WebserverName}/templates:/etc/nginx.templates
       - ${HostDirectoryConfiguration}/${WebserverName}/certificates:/etc/nginx.certificates
       - ${HostDirectoryData}/${WebserverName}/conf:/etc/nginx.conf
-      - ${HostDirectoryData}/${WebserverName}/sites:/home
+      - ${HostDirectoryDeploy}:/home
       - ${HostDirectoryTemporary}/${WebserverName}/log-nginx:/var/log/nginx
       - ${HostDirectoryTemporary}/${WebserverName}/log-letsencrypt:/var/log/letsencrypt
       - ${HostDirectoryTemporary}/${WebserverName}/temp-nginx:/var/lib/nginx/tmp/
@@ -96,3 +79,8 @@ services:
       - HOST4_LOCATION=${HOST4_LOCATION}
       - HOST4_AUTH=${HOST4_AUTH}
       - HOST4_SSL_EMAIL=${HOST4_SSL_EMAIL}
+
+      - HOST5_URL=${HOST5_URL}
+      - HOST5_LOCATION=${HOST5_LOCATION}
+      - HOST5_AUTH=${HOST5_AUTH}
+      - HOST5_SSL_EMAIL=${HOST5_SSL_EMAIL}
