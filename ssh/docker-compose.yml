@@ -12,8 +12,6 @@ services:
     restart: unless-stopped
     networks:
       - nominal
-    ports:
-      - ${SshPortHTTP}:22
     volumes:      
       - ${HostDirectoryConfiguration}/${SshName}/templates:/etc/ssh.templates
       - ${HostDirectoryData}/${SshName}/conf:/etc/ssh.conf
