@@ -19,6 +19,7 @@ services:
       - ${HostDirectoryTemporary}/${MySqlName}/log:/var/log/mysql
     environment:
       MYSQL_ROOT_PASSWORD: "${MySqlRootPassword}"
+      MYSQL_ROOT_HOST: "${MySqlRootHost}"
       MYSQL_USER: "${MySqlUserName}"
       MYSQL_PASSWORD: "${MySqlUserPassword}"
       MYSQL_ALLOW_EMPTY_PASSWORD: "${MySqlAllowEmptyPassword}"
