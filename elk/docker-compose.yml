@@ -31,13 +31,15 @@ services:
     restart: unless-stopped
     networks:
       - nominal
+    ports:
+      - ${LogstashPort}:5044
     volumes:
       - ${HostDirectoryData}/${LogstashName}/data:/usr/share/logstash/data
       - ${HostDirectoryTemporary}/${LogstashName}/log:/usr/share/logstash/logs
     environment:
       ELASTIC_USERNAME: "${ElasticsearchUsername}"
       ELASTIC_PASSWORD: "${ElasticsearchPassword}"
-      xpack.monitoring.elasticsearch.hosts: "http://${ElasticsearchName}:${ElasticsearchPort92}"
+      xpack.monitoring.elasticsearch.hosts: "http://${ElasticsearchName}:9200"
       xpack.monitoring.elasticsearch.username: "${ElasticsearchUsername}"
       xpack.monitoring.elasticsearch.password: "${ElasticsearchPassword}"
       xpack.monitoring.enabled: "true"
@@ -58,10 +60,11 @@ services:
     environment:
       ELASTICSEARCH_USERNAME: "${ElasticsearchUsername}"
       ELASTICSEARCH_PASSWORD: "${ElasticsearchPassword}"
-      ELASTICSEARCH_HOSTS: "http://${ElasticsearchName}:${ElasticsearchPort92}"
+      ELASTICSEARCH_HOSTS: "http://${ElasticsearchName}:9200"
       xpack.monitoring.ui.container.elasticsearch.enabled: "true"
       XPACK_GRAPH_ENABLED: "true"
       XPACK_WATCHER_ENABLED: "true"
       XPACK_ML_ENABLED: "true"
       XPACK_MONITORING_ENABLED: "true"
       XPACK_SECURITY_ENABLED: "true"
+
