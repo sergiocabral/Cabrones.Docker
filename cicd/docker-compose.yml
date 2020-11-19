@@ -25,7 +25,7 @@ services:
     networks:
       - nominal
     volumes:
-      - /root/.ssh:/home/buildagent/.ssh
+      - ${HostDirectoryConfiguration}/.ssh:/home/buildagent/.ssh
     environment:
       - SERVER_URL=http://${TeamCityServerName}:8111
       - AGENT_NAME=${TeamCityAgent1Name}
