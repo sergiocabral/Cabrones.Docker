@@ -23,3 +23,5 @@ services:
       MYSQL_USER: "${MySqlUserName}"
       MYSQL_PASSWORD: "${MySqlUserPassword}"
       MYSQL_ALLOW_EMPTY_PASSWORD: "${MySqlAllowEmptyPassword}"
+    command: ['mysqld', '--character-set-server=${MySqlCharacterSet}', '--collation-server=${MySqlCollation}']
+
