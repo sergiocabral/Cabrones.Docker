@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.8"
 
 networks:
   nominal:
@@ -10,6 +10,7 @@ services:
     container_name: ${TeamCityServerName}
     image: jetbrains/teamcity-server
     restart: unless-stopped
+    hostname: ${TeamCityServerHostname}
     networks:
       - nominal
     ports:
@@ -22,6 +23,7 @@ services:
     container_name: ${TeamCityAgent1Name}
     image: jetbrains/teamcity-agent
     restart: unless-stopped
+    hostname: ${TeamCityAgent1Hostname}
     networks:
       - nominal
     volumes:

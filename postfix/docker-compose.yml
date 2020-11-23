@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.8"
 
 networks:
   nominal:
@@ -10,7 +10,7 @@ services:
     image: sergiocabral/postfix
     container_name: ${PostifxName}
     restart: unless-stopped
-    hostname: ${SmtpHostname}
+    hostname: ${PostifxHostname}
     networks:
       - nominal
     ports:

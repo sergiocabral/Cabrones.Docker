@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.8"
 
 networks:
   nominal:
@@ -10,6 +10,7 @@ services:
     image: sergiocabral/phpfpm
     container_name: php5
     restart: unless-stopped
+    hostname: "php5fpm"
     networks:
       - nominal
     ports:
@@ -28,6 +29,7 @@ services:
     image: sergiocabral/phpfpm
     container_name: php7
     restart: unless-stopped
+    hostname: "php7fpm"
     networks:
       - nominal
     ports:
@@ -46,6 +48,7 @@ services:
     image: sergiocabral/nginx
     container_name: ${WebserverName}
     restart: unless-stopped
+    hostname: ${WebserverHostname}
     networks:
       - nominal
     ports:

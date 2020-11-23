@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.8"
 
 networks:
   nominal:
@@ -10,6 +10,7 @@ services:
     image: portainer/portainer-ce
     container_name: ${PortainerName}
     restart: unless-stopped
+    hostname: ${PortainerHostname}
     networks:
       - nominal
     ports:
@@ -22,6 +23,7 @@ services:
     image: netdata/netdata
     container_name: ${NetdataName}
     restart: unless-stopped
+    hostname: ${NetdataHostname}
     networks:
       - nominal
     ports:

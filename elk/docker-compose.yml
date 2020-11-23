@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.8"
 
 networks:
   nominal:
@@ -10,6 +10,7 @@ services:
     container_name: ${ElasticsearchName}
     image: elasticsearch:${Version}
     restart: unless-stopped
+    hostname: ${ElasticsearchHostname}
     networks:
       - nominal
     ports:
@@ -29,6 +30,7 @@ services:
     container_name: ${LogstashName}
     image: logstash:${Version}
     restart: unless-stopped
+    hostname: ${LogstashHostname}
     networks:
       - nominal
     ports:
@@ -50,6 +52,7 @@ services:
     container_name: ${KibanaName}
     image: kibana:${Version}
     restart: unless-stopped
+    hostname: ${KibanaHostname}
     networks:
       - nominal
     ports:

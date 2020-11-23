@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.8"
 
 networks:
   nominal:
@@ -10,6 +10,7 @@ services:
     container_name: ${MySqlName}
     image: mariadb
     restart: unless-stopped
+    hostname: ${MySqlHostname}
     networks:
       - nominal
     ports:
