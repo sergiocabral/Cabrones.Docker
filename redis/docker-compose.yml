@@ -1,0 +1,21 @@
+version: "3.3"
+
+networks:
+  nominal:
+    external: true
+
+services:
+
+  redis:
+    container_name: ${RedisName}
+    image: redis
+    restart: unless-stopped
+    hostname: ${RedisHostname}
+    networks:
+      - nominal
+    ports:
+      - ${RedisPort}:6379
+    volumes:
+      - ${HostDirectoryData}/${RedisName}/data:/data
+    command: redis-server --requirepass ${RedisPassword}
+
